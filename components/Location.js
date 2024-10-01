@@ -9,6 +9,17 @@ import weatherHelper, {
 function Location({ cities, location, setLocation }) {
   const data = cities;
   const city = data.find(({ city }) => city === location);
+
+  if (!city) {
+    return (
+      <div className="card">
+        <div className="card-body">
+          <h3 className="card-title">Location not found</h3>
+        </div>
+      </div>
+    );
+  }
+
   const weatherIcon = weatherHelper(city.forecast);
 
   return (
