@@ -7,7 +7,7 @@ import Location from "./components/Location";
 import Form from "./components/Form";
 
 function App() {
-  const [location, setLocation] = useState("Tokyo");
+  const [location, setLocation] = useState("");
 
   return (
     <>
@@ -15,17 +15,12 @@ function App() {
       <h3 className="subtitle">Up to the minute weather news</h3>
       <Form location={location} setLocation={setLocation} />
       <div className="app">
-        <Location
-          cities={cities}
-          location={location}
-          setLocation={setLocation}
-        />
-        {
-          /* Render components here */
+        <Location location={location} setLocation={setLocation} />
+
+        {/* Render components here 
           cities.map((city) => (
             <WeatherCard key={city.city} city={city} />
-          ))
-        }
+          ))*/}
       </div>
     </>
   );
