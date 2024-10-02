@@ -7,7 +7,6 @@ function Form({ location, setLocation }) {
     e.preventDefault();
 
     setLocation(typedLocation);
-    console.log(location)
     setTypedLocation("");
   }
 
