@@ -22,6 +22,9 @@ function Location({ cities, location, setLocation }) {
 
     try {
       setError(null);
+
+      // Fetch location coordinates
+
       const res = await fetch(
         `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${REACT_APP_API}`
       );
@@ -29,7 +32,7 @@ function Location({ cities, location, setLocation }) {
 
       if (data.length > 0) {
         setLocationName(data[0].name);
-
+        // Fetch weather data based on the location's coordinates
         const resW = await fetch(
           `https://api.openweathermap.org/data/3.0/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=${REACT_APP_API}`
         );
