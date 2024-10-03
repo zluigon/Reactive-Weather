@@ -10,44 +10,36 @@ import WeatherCard from "./WeatherCard";
 const { REACT_APP_API } = process.env;
 
 function Location({ cities, location, setLocation }) {
-  //   const [coords, setCoords] = useState({});
   const [weather, setWeather] = useState([]);
-
-  //   const data = cities;
-  //   const city = data.find(({ city }) => city === location);
-
-  //   if (!city) {
-  //     return (
-  //       <div className="card">
-  //         <div className="card-body">
-  //           <h3 className="card-title">Location not found</h3>
-  //         </div>
-  //       </div>
-  //     );
-  //   }
-
-  //   const weatherIcon = weatherHelper(city.forecast);
+  const [locationName, setLocationName] = useState("");
+  const [error, setError] = useState(null);
 
   const fetchCoords = async () => {
     if (!location) {
-      console.log("No Location");
+      setError("Search for a location to display forecast information");
       return;
     }
 
     try {
+      setError(null);
       const res = await fetch(
         `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${REACT_APP_API}`
       );
       const data = await res.json();
-      const resW = await fetch(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude={current,minutely,hourly,alerts}&appid=${REACT_APP_API}`
-      );
-      const dataW = await resW.json();
 
-      setWeather(dataW.daily);
-      console.log(weather);
+      if (data.length > 0) {
+        setLocationName(data[0].name);
+
+        const resW = await fetch(
+          `https://api.openweathermap.org/data/3.0/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=${REACT_APP_API}`
+        );
+        const dataW = await resW.json();
+        setWeather(dataW.daily);
+      } else {
+        setError("Location not found");
+      }
     } catch (error) {
-      console.error("Error fetching weather data: ", error);
+      setError("Error fetching weather data: " + error);
     }
   };
 
@@ -56,27 +48,24 @@ function Location({ cities, location, setLocation }) {
   }, [location]);
 
   return (
-    <>
-      {weather.map((data, i) => {
-        <WeatherCard key={i} city={data} />;
-      })}
-    </>
+    <div>
+      {!locationName || locationName.trim() === "" ? null : (
+        <div className="card">
+          <div className="card-body">
+            <div className="card-title">
+              <h3>Location: {locationName}</h3>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {error && <h3 className="error">{error}</h3>}
+
+      {weather.length > 0
+        ? weather.map((day, i) => <WeatherCard key={i} day={day} />)
+        : !error && <h3>No weather data available</h3>}
+    </div>
   );
-  //   return (
-  //     <div className="card">
-  //       <div className="card-body">
-  //         <h3 className="card-title">Your Location's Weather</h3>
-  //       </div>
-  //       <div className="img-container">
-  //         <img className="card-img-top" src={""} alt="Card image cap" id="icon" />
-  //       </div>
-  //       <div className="card-body">
-  //         <h3 className="card-title">The weather in {city.city} is</h3>
-  //         <h5 className="card-text">{city.temperature} C</h5>
-  //         <h5 className="card-text">It is {city.forecast} out today</h5>
-  //       </div>
-  //     </div>
-  //   );
 }
 
 export default Location;

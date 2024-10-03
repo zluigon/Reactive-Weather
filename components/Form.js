@@ -7,7 +7,6 @@ function Form({ location, setLocation }) {
     e.preventDefault();
 
     setLocation(typedLocation);
-    console.log(location)
     setTypedLocation("");
   }
 
@@ -18,7 +17,8 @@ function Form({ location, setLocation }) {
           <input
             type="text"
             value={typedLocation}
-            onChange={(e) => setTypedLocation(e.target.value)} placeholder="Enter city name"
+            onChange={(e) => setTypedLocation(e.target.value)}
+            placeholder="Enter city name"
           />
         </label>
         <button
